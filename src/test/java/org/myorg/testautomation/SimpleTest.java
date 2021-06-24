@@ -1,6 +1,9 @@
 package org.myorg.testautomation;
 
 import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.condition.ReachedVertex;
+import org.graphwalker.core.condition.TimeDuration;
+import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Edge;
@@ -9,6 +12,7 @@ import org.junit.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
 
 public class SimpleTest extends ExecutionContext implements FixedSizeListInterface {
     public final static Path MODEL_PATH = Paths.get("org/myorg/testautomation/projeto4.json");
@@ -105,7 +109,12 @@ public class SimpleTest extends ExecutionContext implements FixedSizeListInterfa
         new TestBuilder()
                 .addContext(new SimpleTest().setNextElement(new Edge().setName("e_fixed_size_list").build()),
                         MODEL_PATH,
-                        new RandomPath(new EdgeCoverage(100)))
+                        new AStarPath(new ReachedVertex("v_full_size_list")))
+                .execute();
+        new TestBuilder()
+                .addContext(new SimpleTest().setNextElement(new Edge().setName("e_fixed_size_list").build()),
+                        MODEL_PATH,
+                        new AStarPath(new ReachedVertex("v_Unsupported")))
                 .execute();
     }
 
@@ -123,7 +132,7 @@ public class SimpleTest extends ExecutionContext implements FixedSizeListInterfa
         new TestBuilder()
                 .addContext(new SimpleTest().setNextElement(new Edge().setName("e_fixed_size_list").build()),
                         MODEL_PATH,
-                        new RandomPath(new EdgeCoverage(100)))
+                        new RandomPath(new TimeDuration(30, TimeUnit.SECONDS)))
                 .execute();
     }
 }
