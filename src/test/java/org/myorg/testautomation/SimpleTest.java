@@ -1,5 +1,6 @@
 package org.myorg.testautomation;
 
+import org.apache.commons.collections4.list.FixedSizeList;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.condition.TimeDuration;
@@ -12,127 +13,142 @@ import org.junit.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class SimpleTest extends ExecutionContext implements FixedSizeListInterface {
     public final static Path MODEL_PATH = Paths.get("org/myorg/testautomation/projeto4.json");
 
+    private FixedSizeList<Integer> fixedSizeList;
+
     @Override
     public void e_fixed_size_list() {
-        System.out.println("e_fixed_size_list: Insert test code here!");
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        fixedSizeList = FixedSizeList.fixedSizeList(list);
     }
     @Override
     public void e_remove() {
-        System.out.println("e_remove: Insert test code here!");
+        try {fixedSizeList.remove(0);}catch (UnsupportedOperationException e){}
     }
     @Override
     public void e_Reset() {
-        System.out.println("e_Reset: Insert test code here!");
+        //
     }
     @Override
     public void e_iterator() {
-        System.out.println("e_iterator: Insert test code here!");
+        fixedSizeList.iterator();
     }
     @Override
     public void e_get() {
-        System.out.println("e_get: Insert test code here!");
+        fixedSizeList.get(0);
     }
     @Override
     public void e_add_all() {
-        System.out.println("e_add_all: Insert test code here!");
+        List<Integer> list = new ArrayList<>();
+        list.add(4);
+        list.add(5);
+        list.add(6);
+        try {fixedSizeList.addAll(list);}catch (UnsupportedOperationException e){}
     }
     @Override
     public void e_retain_all() {
-        System.out.println("e_retain_all: Insert test code here!");
+        List<Integer> list = new ArrayList<>();
+        list.add(4);
+        list.add(5);
+        list.add(6);
+        try {fixedSizeList.retainAll(list);}catch (UnsupportedOperationException e){}
     }
     @Override
     public void e_set() {
-        System.out.println("e_set: Insert test code here!");
+        fixedSizeList.set(0, 10);
     }
     @Override
     public void e_index_of() {
-        System.out.println("e_index_of: Insert test code here!");
+        fixedSizeList.indexOf(1);
     }
     @Override
     public void e_max_size() {
-        System.out.println("e_max_size: Insert test code here!");
+        fixedSizeList.maxSize();
     }
     @Override
     public void e_remove_if() {
-        System.out.println("e_remove_if: Insert test code here!");
+        //
     }
     @Override
     public void e_list_iterator() {
-        System.out.println("e_list_iterator: Insert test code here!");
+        fixedSizeList.listIterator();
     }
     @Override
     public void e_is_full() {
-        System.out.println("e_is_full: Insert test code here!");
+        fixedSizeList.isFull();
     }
     @Override
     public void e_clear() {
-        System.out.println("e_clear: Insert test code here!");
+        try {fixedSizeList.clear();}catch (UnsupportedOperationException e){}
     }
     @Override
     public void e_add() {
-        System.out.println("e_add: Insert test code here!");
+        try {fixedSizeList.add(6);}catch (UnsupportedOperationException e){}
     }
     @Override
     public void e_last_index_of() {
-        System.out.println("e_last_index_of: Insert test code here!");
+        fixedSizeList.lastIndexOf(1);
     }
     @Override
     public void e_remove_all() {
-        System.out.println("e_remove_all: Insert test code here!");
+        try {fixedSizeList.removeAll(fixedSizeList);}catch (UnsupportedOperationException e){}
     }
     @Override
     public void e_sublist() {
-        System.out.println("e_sublist: Insert test code here!");
+        fixedSizeList.subList(0, 1);
     }
 
     @Override
     public void v_Start() {
-        System.out.println("v_Start: Insert test code here!");
+        //System.out.println("v_Start: Insert test code here!");
     }
     @Override
     public void v_full_size_list() {
-        System.out.println("v_full_size_list: Insert test code here!");
+        //System.out.println("v_full_size_list: Insert test code here!");
     }
     @Override
     public void v_Unsupported() {
-        System.out.println("v_Unsupported: Insert test code here!");
+        //System.out.println("v_Unsupported: Insert test code here!");
     }
-
 
     @Test
     public void runSmokeTest() {
-        new TestBuilder()
+        System.out.println(new TestBuilder()
                 .addContext(new SimpleTest().setNextElement(new Edge().setName("e_fixed_size_list").build()),
                         MODEL_PATH,
                         new AStarPath(new ReachedVertex("v_full_size_list")))
-                .execute();
-        new TestBuilder()
+                .execute().getResultsAsString());
+        System.out.println(new TestBuilder()
                 .addContext(new SimpleTest().setNextElement(new Edge().setName("e_fixed_size_list").build()),
                         MODEL_PATH,
                         new AStarPath(new ReachedVertex("v_Unsupported")))
-                .execute();
+                .execute().getResultsAsString());
     }
 
     @Test
     public void runFunctionalTest() {
-        new TestBuilder()
+        System.out.println(new TestBuilder()
                 .addContext(new SimpleTest().setNextElement(new Edge().setName("e_fixed_size_list").build()),
                         MODEL_PATH,
                         new RandomPath(new EdgeCoverage(100)))
-                .execute();
+                .execute().getResultsAsString());
     }
 
     @Test
     public void runStabilityTest() {
-        new TestBuilder()
+        System.out.println(new TestBuilder()
                 .addContext(new SimpleTest().setNextElement(new Edge().setName("e_fixed_size_list").build()),
                         MODEL_PATH,
                         new RandomPath(new TimeDuration(30, TimeUnit.SECONDS)))
-                .execute();
+                .execute().getResultsAsString());
     }
 }
